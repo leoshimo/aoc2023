@@ -2,7 +2,17 @@
 
 https://adventofcode.com/2023
 
-## Test Runner
+## Tooling
 
-Run `./aoc_watch` to watch files for changes, and automate running test cases
+### Test Harness
+
+`./aoc_watch` watches files, and automate running test cases
+
+### For Sharing
+
+`./aoc2md` can be used to format to spoiler markdown
+
+```shell
+$ ./aoc2md day02 | pbcopy
+```
 

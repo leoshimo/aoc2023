@@ -1,0 +1,16 @@
+#!/usr/bin/env sh
+# aoc_2_zulip - Generate scaffolding for Zuliip
+#
+
+DAY="$1"
+if [ ! -d "$DAY" ]; then
+    echo "Usage: aoc_2_zulip DAY_ID\nExample: ./aoc_2_zulip day02"
+    exit 1
+fi
+
+(echo '```spoiler Part 1 (Python)\n```python';
+ cat "${DAY}/part1.py"
+ echo '```\n```';
+ echo '```spoiler Part 2 (Python)\n```python';
+ cat "${DAY}/part2.py"
+ echo '```\n```';)
