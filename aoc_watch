@@ -15,7 +15,7 @@ if ! command -v fswatch >/dev/null; then
 fi
 
 fswatch -0 . --exclude '.git' --exclude 'aoc_watch' | while read -d "" f; do
-    if [ ! -x "$f" ] || ! grep -qE "$CHECK_PAT" "$f"; then
+    if [ -d "$f" ] || [ ! -x "$f" ] || ! grep -qE "$CHECK_PAT" "$f"; then
         continue
     fi
 
