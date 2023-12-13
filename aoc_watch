@@ -1,0 +1,51 @@
+#!/usr/bin/env sh
+# aoc_watch - Watches changes to AOC files and runs checks
+#
+
+NC='\033[0m' 
+GR='\033[0;32m'
+RD='\033[0;31m'
+
+# Files to watch
+FILES="day*/*"
+
+# Lines marked with CHECK_PAT will trigger simple checks
+# e.g. CHECK input 53921
+CHECK_PAT="^.*CHECK:"
+
+if ! command -v fswatch >/dev/null; then
+    echo "Missing dependency: fswatch"
+    exit 1
+fi
+
+fswatch -0 $FILES | while read -d "" f; do
+    if [ ! -x "$f" ] || ! grep -qE "$CHECK_PAT" "$f"; then
+        continue
+    fi
+
+    clear
+
+    echo "*** $f"
+    DAY_DIR=$(dirname "$f")
+
+    grep -E "$CHECK_PAT" "$f" \
+        | sed -E "s/$CHECK_PAT[:space:]*(.*)$/\1/" \
+        | while IFS=" " read file expected; do
+
+        if [ ! -f $file ]; then
+            file="${DAY_DIR}/$file"
+        fi
+
+        CMD="cat $file | $f"
+
+        OUTPUT=$(sh -c "$CMD")
+        if echo "$OUTPUT" | grep -q "$expected"; then
+            echo "${GR}[PASS]${NC}:\t$CMD"
+        else
+            echo "${RD}[FAIL]${NC}:\t$CMD"
+            echo "ACTUAL:\t$OUTPUT"
+            echo "EXPECT:\t$expected"
+            break
+        fi
+        done
+    done
