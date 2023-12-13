@@ -6,19 +6,15 @@ NC='\033[0m'
 GR='\033[0;32m'
 RD='\033[0;31m'
 
-# Files to watch
-FILES="day*/*"
-
-# Lines marked with CHECK_PAT will trigger simple checks
-# e.g. CHECK input 53921
-CHECK_PAT="^.*CHECK:"
+# Lines marked with CHECK_PAT will trigger simple checks. See existing file for usage
+CHECK_PAT="^# CHECK:"
 
 if ! command -v fswatch >/dev/null; then
     echo "Missing dependency: fswatch"
     exit 1
 fi
 
-fswatch -0 $FILES | while read -d "" f; do
+fswatch -0 . --exclude '.git' --exclude 'aoc_watch' | while read -d "" f; do
     if [ ! -x "$f" ] || ! grep -qE "$CHECK_PAT" "$f"; then
         continue
     fi
@@ -39,7 +35,7 @@ fswatch -0 $FILES | while read -d "" f; do
         CMD="cat $file | $f"
 
         OUTPUT=$(sh -c "$CMD")
-        if echo "$OUTPUT" | grep -q "$expected"; then
+        if echo "$OUTPUT" | grep -q "^$expected$"; then
             echo "${GR}[PASS]${NC}:\t$CMD"
         else
             echo "${RD}[FAIL]${NC}:\t$CMD"

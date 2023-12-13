@@ -2,7 +2,7 @@
 # https://adventofcode.com/2023/day/1
 
 # CHECK: sample1 142
-# CHECK: input 53922
+# CHECK: input 53921
 
 import sys
 
@@ -15,3 +15,4 @@ for line in sys.stdin:
     total += int(num)
 
 print(total)
+
