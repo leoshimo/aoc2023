@@ -3,9 +3,10 @@
 
 import sys
 import re
+from functools import reduce
 
-# CHECK: sample1 8
-# CHECK: input 2476
+# CHECK: sample1 2286
+# CHECK: input 54911
 
 def parse(line):
     game_id, games_str = line.split(':')
@@ -22,19 +23,16 @@ def parse(line):
 
     return (int(game_id), games)
 
-def is_possible(games, limit):
-    return all(n <= limit.get(c, 0) for g in games for (c, n) in g.items())
+def power(games):
+    m = {}
+    for g in games:
+        for (c, n) in g.items():
+            m[c] = max(m.get(c, 0), n)
+    return reduce(lambda x, y: x * y, m.values(), 1)
 
 total = 0
-limit = {
-    'red': 12,
-    'green': 13,
-    'blue': 14,
-}
 for line in sys.stdin:
     game_id, games = parse(line)
-    possible = True
-    if is_possible(games, limit):
-        total += game_id
+    total += power(games)
 
 print(total) 
